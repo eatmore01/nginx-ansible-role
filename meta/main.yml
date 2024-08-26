@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   author: eatmore
+  role_name: nginx
   description: setup nginx for ubuntu server
   company: your company (optional)
   license: license (GPL-2.0-or-later, MIT, etc)
@@ -10,7 +11,10 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - jammy
-  galaxy_tags: []
+    - noble
+  galaxy_tags: 
+    - nginx
+    - server
 
 dependencies: []
 
