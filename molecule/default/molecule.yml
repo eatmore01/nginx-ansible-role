@@ -1,0 +1,8 @@
+---
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: ubuntu:jammy
+    privileged: true
+    pre_build_image: true
