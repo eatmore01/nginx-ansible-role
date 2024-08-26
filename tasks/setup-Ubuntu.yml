@@ -1,0 +1,21 @@
+---
+- name: add gpt key
+  apt: 
+    name: dirmngr
+    state: present
+
+- name: setup ppa server for nginx
+  apt_repository:
+    repo: "ppa:nginx/{{ nginx_ppa_version }}"
+    state: present
+    update_cache: true
+  register: ppa_nginx_added
+  when: nginx_ppa_use | bool # | bool приводит переменную nginx_ppa_use к булевому типу
+
+- name: delete nginx when ppa repo changed
+  apt: 
+    name: "{{ nginx_package_name }}"
+    state: abset
+  when: ppa_nginx_added is changed
+  notify: reinstall nginx
+

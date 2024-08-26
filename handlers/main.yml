@@ -1,2 +1,17 @@
 ---
-# handlers file for nginx-ansible-role
+- name: reinstall nginx
+  apt: 
+    name: "{{ nginx_package_name }}"
+    state: present
+  notify: restart nginx
+
+- name: restart nginx
+  service: 
+    name: nginx
+    state: restarted
+
+- name: reload nginx
+  service: 
+    name: nginx
+    state: reloaded
+  when: nginx_service_state == "started"
