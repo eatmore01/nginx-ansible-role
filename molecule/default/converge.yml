@@ -1,7 +1,7 @@
 ---
 - name: Converge
   hosts: all
-  gather_facts: false
+  gather_facts: true
   
   vars:
       nginx_use_ppa: true
@@ -9,4 +9,10 @@
       nginx_vhosts:
         - server_name: "test.dev"
           root: "/var/www/test"
+  # pre_tasks:
+  # - name: Update apt cache.
+  #   apt: update_cache=yes cache_valid_time=600
+  #   changed_when: false
   
+  roles: 
+    - role: jantttez.nginx

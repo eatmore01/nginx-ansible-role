@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: eatmore
+  author: jantttez
   role_name: nginx
   description: setup nginx for ubuntu server
   company: your company (optional)

@@ -15,3 +15,5 @@
     name: nginx
     state: reloaded
   when: nginx_service_state == "started"
+
+
