@@ -8,3 +8,9 @@ nginx_vhost_path: /etc/nginx/sites-enabled
 nginx_default_vhost_path: /etc/nginx/sites-enabled/default
 _nginx_user: "www-data"
 nginx_error_log: "/var/log/nginx/error.log"
+
+ubuntu_pkgs:
+  - nginx
+
+nginx_env:
+  RUNLEVEL: 1

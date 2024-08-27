@@ -10,14 +10,13 @@ lint: |
   yamllint .
   ansible-lint
 platforms:
-  - name: instance
-    # image: ubuntu:latest
-    image: geerlingguy/docker-ubuntu2404-ansible
-    command: ${MOLECULE_DOCKER_COMMAND:-""}
+  - name: ubuntu-noble
+    image: ubuntu:noble
+    dockerfile: ../common/Dockerfile.j2
     privileged: true
-    pre_build_image: true
+    cgroupns_mode: host
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
-    cgroupns_mode: host
+    command: /sbin/init
 provisioner:
   name: ansible

@@ -1,16 +1,18 @@
 ---
-- name: Ensure dirmngr is installed (gnupg dependency).
-  apt:
-    name: dirmngr
-    state: present
+- name: Ensure APT official nginx key
+  apt_key: url=http://nginx.org/keys/nginx_signing.key
+  environment: "{{ nginx_env }}"
+  when: ansible_os_family == 'Debian'
 
-- name: Add PPA for Nginx (if configured).
-  apt_repository:
-    repo: 'ppa:nginx/{{ nginx_ppa_version }}'
-    state: present
-    update_cache: true
+- name: Ensure APT official nginx repository
+  apt_repository: repo="deb http://nginx.org/packages/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release }} nginx"
+  environment: "{{ nginx_env }}"
+  when: ansible_os_family == 'Debian'
   register: nginx_ppa_added
-  when: nginx_ppa_use | bool
+
+- name: update cache
+  apt: 
+    update_cache: true
 
 - name: Ensure nginx will reinstall if the PPA was just added.
   apt:
@@ -18,55 +20,13 @@
     state: absent
   when: nginx_ppa_added is changed
   notify: reinstall nginx
+  register: nginx_ppa_reinstall
 
-
-# ---
-# # - name: Add NGINX GPG key to trusted.gpg.d
-# #   apt_key:
-# #     url: https://nginx.org/keys/nginx_signing.key
-# #     state: present
-# #     keyring: /etc/apt/trusted.gpg.d/nginx.gpg
-# #   register: apt_key_result
-# #   until: apt_key_result is succeeded
-# #   retries: 3
-# #   delay: 5
-
-
-# # - name: Add PPA for Nginx (if configured and available)
-# #   apt_repository:
-# #     repo: "http://ppa.launchpad.net/nginx/{{ nginx_ppa_version }}/ubuntu/dists/{{ ansible_distribution_release }}/Release"
-# #     state: present
-# #     update_cache: true
-# #   when: nginx_ppa_use 
-# #   register: ppa_nginx_added
-# - name: Install required packages
-#   apt:
-#     name:
-#       - curl
-#       - gnupg2
-#       - ca-certificates
-#       - lsb-release
-#     state: present
-
-# - name: Add NGINX repository
-#   apt_repository:
-#     repo: deb http://nginx.org/packages/ubuntu {{ ansible_distribution_release }} nginx
-#     state: present
-#     filename: nginx
-
-# - name: Update package cache
-#   apt:
-#     update_cache: yes
-
-# - name: install nginx
-#   apt: 
-#     name: "{{ nginx_package_name }}"
-#     state: present
-#   notify: restart nginx
-
-# # - name: Remove nginx when ppa repo changed
-# #   apt:
-# #     name: "{{ nginx_package_name }}"
-# #     state: absent
-# #   when: ppa_nginx_added is changed
-# #   notify: reinstall nginx
+- name: install nginx
+  apt: 
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ ubuntu_pkgs }}"
+  environment:  "{{ nginx_env }}"
+  notify: restart nginx
+  when: nginx_ppa_reinstall is not changed

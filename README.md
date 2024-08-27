@@ -1,7 +1,7 @@
 Role Name
 =========
 
-eatmore.nginx
+jantttez.nginx
 
 Requirements
 ------------

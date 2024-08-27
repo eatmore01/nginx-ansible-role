@@ -1,24 +1,7 @@
 ---
-# - name: Gather facts
-#   ansible.builtin.setup:
-
-- name: set os famaly
-  debug: 
-    msg: "{{ ansible_os_family }}"
-  register:  os_f
-
-- name: show os
-  debug: 
-    msg: os_f.stdout
-  when: os_f is changed
-
 - name: Include OS variables.
   include_vars: "{{ ansible_os_family }}.yml"
   when: ansible_os_family is defined
-
-- name: hardcoded include OS variables
-  include_vars: "Ubuntu.yml"
-  when: ansible_distribution is not defined
 
 - name: define nginx user
   set_fact: 
